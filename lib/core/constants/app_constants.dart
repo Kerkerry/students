@@ -1,4 +1,4 @@
-const kBaseUrl = "78e5-197-237-64-105.ngrok-free.app";
+const kBaseUrl = "26bf-197-237-64-105.ngrok-free.app";
 const kCreateUserEndpoint = "/create-student";
 const kGetUsersEndpoint = "/get-users";
 const kGetUserEndpoint = "";

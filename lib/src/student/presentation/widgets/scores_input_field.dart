@@ -22,6 +22,9 @@ class _ScoresInputFieldState extends State<ScoresInputField> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      // onChanged: (value) {
+      //   widget.inputController.text = value;
+      // },
       controller: widget.inputController,
       obscureText: widget.ispassword,
       keyboardType: widget.useNumberKeyboard

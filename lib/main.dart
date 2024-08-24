@@ -84,6 +84,9 @@ class _MyHomePageState extends State<MyHomePage> {
         if (state is UserDeletedState) {
           getUsers();
         }
+        if (state is UserUpdatedState) {
+          getUsers();
+        }
       },
       builder: (context, state) {
         return Scaffold(
@@ -118,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 studentFullName:
                                                     "${student.firstname} ${student.secondname}"))),
                                     trailing: SizedBox(
-                                      width: 114,
+                                      width: 145,
                                       child: Row(
                                         children: [
                                           IconButton(
@@ -127,8 +130,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 stdid: student.id),
                                             icon: const Icon(Icons.add),
                                           ),
-                                          const SizedBox(
-                                            width: 15,
+                                          IconButton(
+                                            onPressed: () => _updateStudent(
+                                                context: context,
+                                                user: student),
+                                            icon: const Icon(
+                                              Icons.edit,
+                                              color: Colors.green,
+                                            ),
                                           ),
                                           IconButton(
                                             onPressed: () {
@@ -252,6 +261,10 @@ class _MyHomePageState extends State<MyHomePage> {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
+        firstname.clear();
+        secondname.clear();
+        email.clear();
+        password.clear();
         return AlertDialog(
           title: const Text('Create student'),
           content: Form(
@@ -309,6 +322,76 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.of(context).pop();
                 }
                 logger.e("Not empty");
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _updateStudent(
+      {required BuildContext context, required User user}) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        firstname.text = user.firstname;
+        secondname.text = user.secondname;
+        email.text = user.email;
+        password.text = user.password;
+        return AlertDialog(
+          title: const Text('Create student'),
+          content: Form(
+              child: Column(
+            children: [
+              ScoresInputField(
+                  useNumberKeyboard: false,
+                  inputController: firstname,
+                  lableText: "First name"),
+              const SizedBox(height: 10),
+              ScoresInputField(
+                  useNumberKeyboard: false,
+                  inputController: secondname,
+                  lableText: "Second name"),
+              const SizedBox(height: 10),
+              ScoresInputField(
+                  useNumberKeyboard: false,
+                  inputController: email,
+                  isemail: true,
+                  lableText: "Email"),
+              const SizedBox(height: 10),
+              ScoresInputField(
+                  useNumberKeyboard: false,
+                  inputController: password,
+                  ispassword: false,
+                  lableText: "Password"),
+              const SizedBox(height: 10)
+            ],
+          )),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Submit'),
+              onPressed: () {
+                final User newUser = User(
+                    id: user.id,
+                    firstname: firstname.text,
+                    secondname: secondname.text,
+                    email: email.text,
+                    password: password.text);
+                context.read<AuthBloc>().add(UpdateUserEvent(user: newUser));
+                Navigator.of(context).pop();
               },
             ),
           ],

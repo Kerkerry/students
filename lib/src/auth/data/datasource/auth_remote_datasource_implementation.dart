@@ -93,15 +93,16 @@ class RemoteDatasourceImplementation implements RemoteDatasource {
   @override
   Future udpateUser({required String id, required User user}) async {
     try {
-      final response =
-          await _client.put(Uri.https(kBaseUrl, kUpdateUserEndpoint),
-              body: jsonEncode({
-                'firstname': user.firstname,
-                'secondname': user.secondname,
-                'email': user.email,
-                'password': user.password
-              }),
-              headers: headers);
+      final student = jsonEncode({
+        "id": id,
+        'firstname': user.firstname,
+        'secondname': user.secondname,
+        'email': user.email,
+        'password': user.password
+      });
+      final response = await _client.put(
+          Uri.https(kBaseUrl, "/update-student/$student"),
+          headers: headers);
       if (response.statusCode != 200) {
         throw (APIException(
             statusCode: response.statusCode, message: response.body));
